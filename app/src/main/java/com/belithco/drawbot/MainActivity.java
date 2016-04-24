@@ -1,5 +1,7 @@
 package com.belithco.drawbot;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +44,45 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        // Handle an incoming intent
+        Intent intent = getIntent();
+        if (null!=intent) {
+            String action = intent.getAction();
+            String type = intent.getType();
+
+            // Incoming image?
+            if (Intent.ACTION_SEND.equals(action) && type != null) {
+                if (type.startsWith("image/")) {
+                    handleSendImage(intent); // Handle single image being sent
+                }
+            } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+                if (type.startsWith("image/")) {
+                    handleSendMultipleImages(intent); // Handle multiple images being sent
+                }
+            }
+        }
+    }
+
+    /**
+     * Single Image
+     * @param intent
+     */
+    void handleSendImage(Intent intent) {
+        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUri != null) {
+            // Update UI to reflect image being shared
+        }
+    }
+
+    /**
+     *
+     * @param intent
+     */
+    void handleSendMultipleImages(Intent intent) {
+        ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+        if (imageUris != null) {
+            // Update UI to reflect multiple images being shared
+        }
     }
 
     @Override
