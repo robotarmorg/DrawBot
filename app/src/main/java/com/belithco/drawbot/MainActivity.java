@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -74,11 +74,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Single Image
-     * @param intent
+     * Update UI with Single Image being shared
+     * @param intent contains one or more image URIs
      */
     void handleSendImage(Intent intent) {
-        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
             // Update UI to reflect image being shared
             Log.d(TAG, imageUri.getEncodedPath());
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     *
-     * @param intent
+     * Update UI with images being shared
+     * @param intent contains image URIs
      */
     void handleSendMultipleImages(Intent intent) {
         ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity
     void importFile(){
         Intent intent = new Intent();
         intent.setType("image/*");
+        // TODO Not supported before SDK 18
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select Picture"), PICK_IMAGE_MULTIPLE);
@@ -191,7 +192,7 @@ public class MainActivity extends AppCompatActivity
                 // Get the Image from data
 
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                imagesEncodedList = new ArrayList<String>();
+                imagesEncodedList = new ArrayList<>();
                 if(data.getData()!=null){
 
                     Uri imageUri = data.getData();
@@ -200,6 +201,7 @@ public class MainActivity extends AppCompatActivity
                     Cursor cursor = getContentResolver().query(imageUri,
                             filePathColumn, null, null, null);
                     // Move to first row
+                    // TODO May produce an NPE
                     cursor.moveToFirst();
 
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
@@ -214,7 +216,7 @@ public class MainActivity extends AppCompatActivity
                 {
                     if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
-                        ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
+                        ArrayList<Uri> mArrayUri = new ArrayList<>();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
 
                             ClipData.Item item = mClipData.getItemAt(i);
@@ -223,6 +225,7 @@ public class MainActivity extends AppCompatActivity
                             // Get the cursor
                             Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
                             // Move to first row
+                            // TODO may produce an NPE
                             cursor.moveToFirst();
 
                             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
